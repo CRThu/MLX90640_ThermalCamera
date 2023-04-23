@@ -5,6 +5,22 @@ import numpy as np
 import cv2
 
 
+# run once
+# 模块默认配置为9600,需在9600bps下写入以下配置后下电重新上电复位进入460800bps正常工作
+def initial_setup():
+    # set baud rate 460800bps
+    ser.write(serial.to_bytes([0xA5, 0x15, 0x03, 0xBD]))
+    # ser.baudrate = 460800
+
+    # set frequency of module to 8 Hz
+    ser.write(serial.to_bytes([0xA5, 0x25, 0x04, 0xCE]))
+
+    # 发射率 0.95
+    ser.write(serial.to_bytes([0xA5, 0x45, 0x5F, 0x49]))
+
+    # 写入flash
+    ser.write(serial.to_bytes([0xA5, 0x65, 0x01, 0x0B]))
+
 # function to get Emissivity from MCU
 def get_emissivity():
     ser.write(serial.to_bytes([0xA5, 0x55, 0x01, 0xFB]))
@@ -51,14 +67,6 @@ print('Configuring Serial port')
 ser = serial.Serial('COM18')
 ser.baudrate = 460800
 
-# set baud rate 460800bps
-# ser.write(serial.to_bytes([0xA5, 0x15, 0x03, 0xBD]))
-# ser.baudrate = 460800
-
-# set frequency of module to 1 Hz
-# ser.write(serial.to_bytes([0xA5, 0x25, 0x01, 0xCB]))
-# set frequency of module to 8 Hz
-# ser.write(serial.to_bytes([0xA5, 0x25, 0x04, 0xCE]))
 time.sleep(0.1)
 
 # Starting automatic data colection
